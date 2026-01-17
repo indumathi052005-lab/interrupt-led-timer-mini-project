@@ -1,0 +1,27 @@
+#ifndef MAIN_H
+#define MAIN_H
+
+#include <stdint.h>
+
+/* Simulated GPIO Register Structure */
+typedef struct
+{
+    volatile uint32_t MODER;
+    volatile uint32_t ODR;
+} GPIO_TypeDef;
+
+/* Simulated Timer Register Structure */
+typedef struct
+{
+    volatile uint32_t PSC;
+    volatile uint32_t ARR;
+    volatile uint32_t CR1;
+} TIM_TypeDef;
+
+/* Function declarations */
+void GPIO_Init(void);
+void Timer_Init(uint32_t delay);
+void Timer_IRQHandler(void);
+void LED_Toggle(void);
+
+#endif

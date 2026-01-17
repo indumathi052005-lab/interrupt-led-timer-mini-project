@@ -1,0 +1,60 @@
+#include "main.h"
+#include <stdio.h>
+
+/* Simulated Registers */
+GPIO_TypeDef GPIOA;
+TIM_TypeDef TIM2;
+
+/* LED state variable */
+uint8_t led_state = 0;
+
+/* Initialize GPIO */
+void GPIO_Init(void)
+{
+    /* Set PA5 as output */
+    GPIOA.MODER |= (1 << (5 * 2));
+}
+
+/* Initialize Timer */
+void Timer_Init(uint32_t delay)
+{
+    /* Configure prescaler and auto-reload */
+    TIM2.PSC = 16000 - 1;
+    TIM2.ARR = delay;
+
+    /* Enable timer */
+    TIM2.CR1 |= 1;
+}
+
+/* Toggle LED */
+void LED_Toggle(void)
+{
+    led_state ^= 1;
+
+    if (led_state)
+        GPIOA.ODR |= (1 << 5);   // LED ON
+    else
+        GPIOA.ODR &= ~(1 << 5);  // LED OFF
+}
+
+/* Timer Interrupt Handler (Simulated) */
+void Timer_IRQHandler(void)
+{
+    LED_Toggle();
+}
+
+/* Main Function */
+int main(void)
+{
+    GPIO_Init();
+    Timer_Init(500);
+
+    while (1)
+    {
+        /* Simulated interrupt call */
+        Timer_IRQHandler();
+
+        /* Software delay to simulate time */
+        for (volatile int i = 0; i < 1000000; i++);
+    }
+}
